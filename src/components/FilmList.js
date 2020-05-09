@@ -1,5 +1,5 @@
 import React from "react";
-import FilmItem from "./FilmItem.js";
+import FilmItem from "./FilmItem/FilmItem.js";
 class FilmList extends React.Component {
 	constructor(props) {
 		super(props);
@@ -9,9 +9,11 @@ class FilmList extends React.Component {
 	}
 
 	componentWillReceiveProps(nextProps) {
-		this.setState({
-			filmList: nextProps.filmList
-		});
+		if (nextProps.filmList) {
+			this.setState({
+				filmList: nextProps.filmList
+			});
+		}
 	};
 
 	render() {
@@ -19,12 +21,14 @@ class FilmList extends React.Component {
 		const filmContainer = [];
 		filmList.map((film, index) => {
 			filmContainer.push(
-				<FilmItem key={index} 
-						  filmData={film} 
-						  openFilmPanel={this.props.openFilmPanel} 
+				<FilmItem key={index}
+						  filmData={film}
+						  openFilmPanel={this.props.openFilmPanel}
+						  filmWatched={this.props.filmWatched}
+						  inFavourite={this.props.inFavourite}
 				/>
 			);
-		})
+		});
 		return (
 			<main className="film-list">
 				<div className="film-list__container js-film-list">

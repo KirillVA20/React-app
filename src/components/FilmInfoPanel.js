@@ -1,9 +1,10 @@
 import React from "react";
+import AddFavorite from "./ItemButtons/AddFavorite";
 
 class FilmInfoPanel extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { 
+		this.state = {
 			open: false,
 			filmData: {},
 		}
@@ -26,7 +27,19 @@ class FilmInfoPanel extends React.Component {
 					filmData: result
 				});
 			});
-		}	
+
+			let favouriteList = nextProps.favourite.indexOf(filmId);
+
+			if (+favouriteList > -1) {
+				this.setState({
+					inFavouriteList: true
+				})
+			} else {
+				this.setState({
+					inFavouriteList: false
+				})
+			}
+		}
 	}
 
 	closePanel() {
@@ -38,6 +51,7 @@ class FilmInfoPanel extends React.Component {
 
 	render() {
 		const filmData = this.state.filmData;
+
 		return (
 			<div className={
 					(this.state.open) ? "film-info film-info--open" : "film-info"
@@ -47,15 +61,15 @@ class FilmInfoPanel extends React.Component {
 						<button className="js-close-panel film-info__close-button"
 								onClick={this.closePanel}
 						>
-							<i className="fas fa-chevron-left"></i>
+							<i className="fas fa-chevron-left"/>
 						</button>
 					</div>
 					<div className="film-info__left">
 						<div className="film-info__poster">
-							<img src={filmData.Poster} 
-								 alt={filmData.Title} 
+							<img src={filmData.Poster}
+								 alt={filmData.Title}
 								 className="js-info-poster film-info__main-image"
-							></img>
+							/>
 						</div>
 					</div>
 					<div className="film-info__right">
@@ -71,16 +85,15 @@ class FilmInfoPanel extends React.Component {
 								</span>
 							</div>
 							<div className="film-info__genre">
-								<span id="js-info-genre film-info__genre"></span>
+								<span id="js-info-genre film-info__genre"/>
 							</div>
 						</div>
 					</div>
 					<div className="film-info__button-panel">
-						<button className="film-info__in-queue js-in-queue" 
-								data-id={filmData.imdbID} 
-						>
-							<i className="fas fa-heart"></i>
-						</button>
+						<AddFavorite
+							imdbID={filmData.imdbID}
+							inFavourite={this.props.inFavourite}
+						/>
 					</div>
 				</div>
 			</div>

@@ -3,7 +3,7 @@ import React from "react";
 function DeleteFavorite(props) {
 
         const outFavouriteHandler = () => {
-            props.outFavourite(props.imdbID);
+            props.outFavourite(props.id);
         }
 
         return (

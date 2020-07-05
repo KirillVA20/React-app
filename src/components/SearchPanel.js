@@ -1,55 +1,59 @@
 import React from "react";
 import FavInformer from "./FavInformer";
 import PersonalAvatar from "./PersonalAvatar";
+import Rating from "./Rating/Rating";
+import {Button, Input} from "antd";
+import { SearchOutlined } from '@ant-design/icons';
+import {connect} from 'react-redux';
+import {searchFilm} from "../store/actions";
+
+const { Search } = Input;
 
 class SearchPanel extends React.Component {
 	constructor(props) {
 		super(props);
-		this.handleChange = this.handleChange.bind(this);
 	}
 
-	handleChange(e) {
-		this.props.enterValue(e.target.value);
+	componentWillMount() {
 	}
 
 	render() {
-		const favouriteLength = this.props.favourite.length;
+		//const favouriteLength = this.props.favourite.length;
 
 		return (
 			<header className="head-panel">
 				<div className="head-panel__wrap">
-					<div>
-						<input type="text"
-							   name="name"
-							   className="head-panel__name-input js-film-name"
-							   placeholder="Введите название фильма"
-							   value={this.props.name}
-							   onChange={this.handleChange}
+					<div className="head-panel__left">
+						<Search placeholder="input search text"
+								onSearch={value => this.props.searchFilm(value)}
+								enterButton = "Search"
+								size="large"
 						/>
-						<button type="submit"
-								onClick={this.props.searchFilm}
-								name="submit"
-								className="head-panel__submit button-style"
-						>
-							<i className="fas fa-search"/>
-							Искать
-						</button>
 					</div>
-					<div>
-						{this.props.rating}
+					<div className="head-panel__right">
+						<FavInformer
+							//favouriteLength = {favouriteLength}
+							openFavourite = {this.props.openFavourite}
+						/>
+						<Rating
+							rating={this.props.rating}
+						/>
+						<PersonalAvatar
+							openPersonal={this.props.openPersonal}
+							personalAvatar={this.props.personalInfo.avatar}
+						/>
 					</div>
-					<FavInformer
-						favouriteLength = {favouriteLength}
-						openFavourite = {this.props.openFavourite}
-					/>
-					<PersonalAvatar
-						openPersonal={this.props.openPersonal}
-						personalAvatar={this.props.personalInfo.avatar}
-					/>
 				</div>
 			</header>
 		)
 	}
 }
 
-export default SearchPanel;
+const mapDispatchToProps = dispatch => {
+	return {
+		searchFilm: (name) => dispatch(searchFilm(name))
+	}
+}
+
+
+export default connect(null, mapDispatchToProps)(SearchPanel);

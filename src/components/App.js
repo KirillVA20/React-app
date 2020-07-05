@@ -1,81 +1,42 @@
 import React from "react";
 import SearchPanel from './SearchPanel.js';
 import FilmList from './FilmList.js';
-import FilmInfoPanel from './FilmInfoPanel.js';
+import FilmInfoPanel from './FilmInfoPanel/FilmInfoPanel.js';
 import FavouritePanel from './FavouritePanel';
 import PersonalPanel from "./PersonalPanel";
 import '../styles/App.css';
+import 'antd/dist/antd.css';
+import {connect} from "react-redux";
 
 class App extends React.Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			name: 'Batman',
 			filmList: [],
 			filmInfoPanel: {
 				open: false,
 				filmId: ""
 			},
-			favourite: [],
+			favouriteList: [],
 			favouritePanelOpen: false,
 			watchedFilms: [],
 			rating: 0,
-			openPersonalPanel: true,
+			openPersonalPanel: false,
 			personalInfo: {
 				avatar: "../images/Mario.jpg",
 				name: "Kirill",
 				favoritesJenre: ["fantastic"],
 				favoritesFilm: ["Birdman"]
-			}
+			},
 		};
 
-		this.searchFilm = this.searchFilm.bind(this);
-		this.enterValue = this.enterValue.bind(this);
-		this.openFilmPanel = this.openFilmPanel.bind(this);
-		this.closeFilmPanel = this.closeFilmPanel.bind(this);
 		this.inFavourite = this.inFavourite.bind(this);
 		this.openFavourite = this.openFavourite.bind(this);
 		this.outFavourite = this.outFavourite.bind(this);
 		this.filmWatched = this.filmWatched.bind(this);
 		this.openPersonal = this.openPersonal.bind(this);
 		this.changeAvatar = this.changeAvatar.bind(this);
-	}
-
-	searchFilm(e) {
-		e.preventDefault();
-		let searchMethod = fetch(`http://www.omdbapi.com/?apikey=de208628&s=${this.state.name}`)
-		searchMethod.then(response => {
-			return response.json();
-		}).then(result => {
-			this.setState({
-				filmList: result
-			});
-		});
-	}
-
-	enterValue(name) {
-		this.setState({
-			name: name
-		})
-	}
-
-	openFilmPanel(filmId) {
-		this.setState({
-			filmInfoPanel : {
-				open: true,
-				filmId
-			}
-		});
-	}
-
-	closeFilmPanel() {
-		this.setState({
-			filmInfoPanel : {
-				open: false,
-				filmId: ""
-			}
-		});
 	}
 
 	inFavourite(filmId) {
@@ -118,7 +79,6 @@ class App extends React.Component {
 	}
 
 	changeAvatar(filePath) {
-		console.log(filePath)
 		this.setState({
 			personalInfo : {
 				...this.state.personalInfo,
@@ -128,10 +88,9 @@ class App extends React.Component {
 	}
 
 	render() {
-		const name = this.state.name;
 		const favourite = this.state.favourite;
 		const favouritePanelOpen = this.state.favouritePanelOpen;
-		const filmList = this.state.filmList.Search;
+		const filmList = this.state.filmList;
 		const openFavourite = this.openFavourite;
 		const outFavourite = this.outFavourite;
 		const filmWatched = this.filmWatched;
@@ -145,9 +104,6 @@ class App extends React.Component {
 		return (
 			<div className="container">
 				<SearchPanel
-					name={name}
-					enterValue={this.enterValue}
-					searchFilm={this.searchFilm}
 					favourite={favourite}
 					openFavourite={openFavourite}
 					rating={rating}
@@ -156,23 +112,21 @@ class App extends React.Component {
 				/>
 				<FilmList
 					filmList={filmList}
-					openFilmPanel={this.openFilmPanel}
 					filmWatched={filmWatched}
 					inFavourite={this.inFavourite}
 				/>
 				<FilmInfoPanel
 					filmInfoPanel = {this.state.filmInfoPanel}
-					closeFilmPanel={this.closeFilmPanel}
 					inFavourite={this.inFavourite}
 					favourite={favourite}
 				/>
-				<FavouritePanel
+				{/* <FavouritePanel
 					favouritePanelOpen = {favouritePanelOpen}
 					favourite = {favourite}
 					outFavourite = {outFavourite}
 					filmWatched = {filmWatched}
 					watchedFilms = {watchedFilms}
-				/>
+				/> */}
 				<PersonalPanel
 					personalInfo={personalInfo}
 					openPersonalPanel={openPersonalPanel}
@@ -183,4 +137,10 @@ class App extends React.Component {
 	}
 }
 
-export default App;
+function mapStateToProps(state) {
+	return { 
+		favorites: state.favorites.favouriteList,
+	}
+}
+
+export default connect(mapStateToProps)(App);

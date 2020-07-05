@@ -2,6 +2,8 @@ import React from "react";
 import DeleteFavorite from "./ItemButtons/DeleteFavorite";
 import AddWatched from "./ItemButtons/AddWatched";
 import Share from "./ItemButtons/Share";
+import {connect} from 'react-redux';
+import {openPanel, addFavorite} from '../store/actions';
 
 class FavouriteItem extends React.Component {
     constructor(props) {
@@ -24,11 +26,11 @@ class FavouriteItem extends React.Component {
                 <div className="favourite-item__button-panel">
                     <DeleteFavorite
                         outFavourite={this.props.outFavourite}
-                        imdbID={this.state.filmData.imdbID}
+                        imdbID={this.state.filmData.id}
                     />
                     <AddWatched
                         filmWatched={this.props.filmWatched}
-                        imdbID={this.state.filmData.imdbID}
+                        imdbID={this.state.filmData.id}
                     />
                     <Share />
                 </div>
@@ -45,10 +47,11 @@ class FavouriteItem extends React.Component {
     render() {
         let filmData = this.state.filmData;
         const buttonPanel = this.buttonPanelFunc(this.props.openList);
+        let backgroundImage = `https://image.tmdb.org/t/p/w500${filmData.poster_path}`;
         return (
             <div className="favourite-item">
                 <div className="favourite-item__poster">
-                    <img src={filmData.Poster}
+                    <img src={backgroundImage}
                          alt={filmData.Title}
                     />
                 </div>
@@ -63,4 +66,10 @@ class FavouriteItem extends React.Component {
     }
 }
 
-export default FavouriteItem;
+const mapDispatchToProps = dispatch => {
+    return {
+        openFilmPanel: (filmId) => dispatch(openPanel(filmId)),
+    }
+}
+
+export default connect(null,mapDispatchToProps)(FavouriteItem);
